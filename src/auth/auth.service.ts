@@ -8,15 +8,14 @@ export class AuthService {
  constructor(private usersService: UsersService) {}
 
  async handleLogin(userCredentials: UserCredentials): Promise<User> {
-  const user = await this.usersService.getUser(userCredentials.googleId);
+  let user = await this.usersService.getUser(userCredentials.googleId);
 
   if (user) {
     // generate and return token
-    return user;
+  } else {
+    // create user and generate and return token
+    user = await this.usersService.createUser(userCredentials);
   }
-
-  // create user and generate and return token
-  const newUser = await this.usersService.createUser(userCredentials);
-  return newUser;
+  return user;
  }
 }
