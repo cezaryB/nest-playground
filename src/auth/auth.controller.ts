@@ -1,6 +1,7 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { AccessToken } from './model/jwt.model';
 
 @Controller('auth')
 export class AuthController {
@@ -14,8 +15,15 @@ export class AuthController {
 
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
-  signInCallback(@Req() req) {
+  signInCallback(@Req() req): Promise<AccessToken> {
     // handles the Google OAuth2 callback
-    this.authService.handleLogin(req.user);
+    return this.authService.handleLogin(req.user);
+  }
+
+  // route for testing jwt token authorization
+  @Get('/test')
+  @UseGuards(AuthGuard('jwt'))
+  testCallback() {
+    return 'You should only see this if JWT token was provided';
   }
 }

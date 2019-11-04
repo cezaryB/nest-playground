@@ -18,7 +18,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
   async validate(request: any, accessToken: string, refreshToken: string, profile: any, done: Function) {
     try {
-      // I assume that here we are creating new user / changing active flag to true
       done(null, { 
         email: profile.emails[0].value,
         googleId: profile.id,
